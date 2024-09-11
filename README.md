@@ -1,43 +1,56 @@
-# Desafio Review Android Compose 
-## Coupon List Screen
-Este projeto contém uma tela exibindo uma lista de cupons para nosso app de delivery. 
-A tela permite que os usuários marquem cupons como usados em um checkbox.
+# Comentários sobre o Projeto
 
-O arquivo figma com protótipo está na pasta [assets](assets/Coupons-Screen.fig)
+## Bugs Identificados
 
-![Preview](assets/screenshot.png)
+1. **Tela Inicial sem Scroll**  
+   **Descrição**: A tela inicial não permite rolagem, impossibilitando a visualização de todo o conteúdo em dispositivos menores.  
+   **Solução**: Adicionar `verticalScroll(rememberScrollState())` na `Column` que estrutura a tela.
 
+2. **Erro de Nome de Função no `CouponRepositoryTest`**  
+   **Descrição**: O arquivo `CouponRepositoryTest` utiliza a função `loadCupons()`, enquanto a função correta no código é `lodCupons()`.  
+   **Solução**: Ajustar o nome da função `lodCupons` para `loadCupons` no arquivo `CouponRepository` e em todos os locais onde essa função é utilizada. Outra opção é utilizar a ferramenta de refatoração do Android Studio para realizar essa mudança de forma automática e segura.
 
-### Objetivo:
-Sua tarefa é revisar o código existente para essa tela e identificar áreas para melhoria, possíveis falhas, qualquer coisa que achar interessante. 
-Considere as melhores práticas do Compose, gerenciamento de estado, arquiteturas, padrões de projeto, e qualidade geral do código.
+---
 
-### Expectativa:
-Cada review depende de muitos fatores, quem escreveu o código, as condições do projeto, prazos, etc,
-Então não se preocupe com o quão crítico pode ser, fique livre e a vontade para comentar qualquer ponto e caso não se sinta a vontade, nos avise.
+## Melhorias Sugeridas
 
-### Entrega - Importante:
-Você não precisa escrever nenhum código para este desafio. Articular claramente suas ideias e soluções propostas é suficiente.
-Sinta-se à vontade para sugerir quaisquer bibliotecas, padrões ou técnicas que você acredita que melhorariam o código ou a experiência do usuário.
-Não há respostas certas ou erradas. Estamos interessados em conhecer seu processo de pensamento e visão geral.
+1. **Utilização de `LazyColumn` para Listagens**  
+   Em vez de utilizar uma `Column` para listar os cupons, é recomendável usar `LazyColumn`, já que ela carrega apenas os itens visíveis na tela, melhorando o desempenho com grandes volumes de dados.
 
-## Como entregar:
-Adicione suas ideias no readme ou no próprio código, escreva comentários, faça esboços, etc.
-1. Crie um repositório no seu github com o projeto do link recebido por email
-2. Crie um pull request no seu repositório para compartilhar suas ideias:
+2. **Separar Função `CouponList` em um Arquivo Próprio**  
+   Mover a função `CouponList` para um arquivo separado aumenta a modularização e melhora a legibilidade do código.
 
-3. Você pode:
-   - Adicionar nossos usuários (enviados por email) ao seu repositório para avaliarmos suas ideias propostas. 
-   - Ou ainda se preferir apresentar pra gente num papo, avisa a gente.
+3. **Implementação de um `ViewModel`**  
+   Criar um `ViewModel` para gerenciar o estado da tela, a origem dos dados e as interações do usuário, separando a lógica de negócios da interface de usuário.
 
-### Bônus:
-- Pense em como você lidaria com um grande número de cupons de forma eficiente.
-- Que estratégias você usaria para garantir que a tela permaneça com bom desempenho mesmo com um grande conjunto de dados?
+4. **Criar Componente `CouponItem` em Arquivo Separado**  
+   Criar um arquivo dedicado para o componente `CouponItem`, o que melhora a organização e reutilização desse item em diferentes partes do app.
 
-Imagine um cenário maior dessa tela, em que os cupons são retornados de uma api:
-1. o que você usaria de arquitetura?
-2. Algum padrão de projeto que acha que faz sentido ser adotado.
-3. Em relação a UI, alguma coisa mudaria se os dados viessem da api?
-4. Alguma(s) biblioteca(s) que faça sentido incorporar nesse caso?
-  
-Estamos ansiosos para ouvir suas ideias e soluções propostas!
+5. **Organizar Arquivos em Pacotes (Camadas)**  
+   Reorganizar os arquivos em pacotes (ou camadas) conforme as responsabilidades (e.g., `model`, `view`, `repository`, etc.), seguindo boas práticas de arquitetura e facilitando a manutenção e expansão do código.
+
+6. **Utilizar `Room` e `Paging3`**  
+   Implementar o **Room** para gerenciar os dados localmente e usar **Paging3** para a paginação dos itens. Isso garante que os dados sejam carregados sob demanda, melhorando o desempenho e a experiência do usuário em listagens grandes.
+
+---
+
+## Considerações sobre um Cenário Maior
+
+Imagine um cenário em que os cupons são retornados de uma API. Abaixo estão minhas considerações:
+
+### 1. Qual arquitetura você usaria?
+- **MVVM (Model-View-ViewModel)**: Separaria as responsabilidades entre a Model, View e ViewModel, o que facilita o gerenciamento de estado, lógica de negócios e interação com a UI.
+
+### 2. Algum padrão de projeto que faz sentido adotar?
+- **Clean Architecture com MVVM**: Mesmo para projetos pequenos, essa abordagem oferece modularidade, facilidade de manutenção, testes e flexibilidade para crescer. Principais vantagens:
+   - Modularização do projeto.
+   - Facilidade na implementação de testes e na manutenção do código.
+   - Flexibilidade para mudanças e melhorias no futuro.
+
+### 3. Em relação à UI, algo mudaria se os dados viessem da API?
+- Sim. Criaria um **ViewModel** para gerenciar o estado da tela e o fluxo de dados vindos da API. Isso garante que a interface seja reativa e responda adequadamente às mudanças no backend.
+
+### 4. Bibliotecas que fariam sentido incorporar nesse caso:
+- **Retrofit** ou **Ktor** para comunicação com APIs externas.
+- **Hilt** ou **Koin** para injeção de dependências, facilitando o gerenciamento de objetos e a testabilidade.
+- **Room** para armazenamento local e **Paging3** para paginação eficiente dos dados da API.
